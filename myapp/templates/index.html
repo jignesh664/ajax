@@ -30,7 +30,7 @@
     <div class="row">
         <div class="col-sm-4">
             <h4 class="text-center alert alert-info">Add/Update Empolyee Details</h4>
-            <form action="" method="POST">{% csrf_token %}
+            <form action="" method="POST" id="insertForm">{% csrf_token %}
                 Name:<input type="text" id="nameid" name="name"> <br>
                 <br>
                 Email:<input type="text" id="emailid" name="email"><br>
@@ -58,7 +58,6 @@
                 <tbody id="tbody">
                     {% for e in emp %}
                     <tr>
-
                         <td>{{e.id}}</td>
                         <td>{{e.name}}</td>
                         <td>{{e.email}}</td>
@@ -101,36 +100,34 @@
                     url: "{% url 'save' %}",
                     method: "POST",
                     data: mydata,
-                    success: function () {
-                        console.log(data);
-                        console.log(data.status);
-                        x = console.log(data.user_data);
-                        if (data.status == "save") {
+                    success: function (resp) {
+                        x = resp.user_data;
+                        if (resp.status == "save") {
                             console.log("Form Submitted Successfully");
-                            // console.log(x);
 
                             for (i = 0; i < x.length; i++) {
-                                output += "<tr><td>" + x[i].id + "</td><td>" + x[i].name +
-                                    "</td><td>" + x[i].email + "</td><td>" + x[i].password +
-                                    "</td>"
+                                output += `
+                                        <tr>
+                                            <td>${x[i].id}</td>
+                                            <td>${x[i].name}</td>
+                                            <td>${x[i].email}</td>
+                                            <td>${x[i].password}</td>
+                                        </tr>
+                                `;
                             }
                             $("#tbody").html(output);
 
                         }
-                        if (data.status == 0) {
+                        if (resp.status == 0) {
                             console.log("enable to saved form pls try Again ")
                         }
                     }
 
-                })
+                });
             }
+            $('#insertForm').trigger('reset');
         });
     </script>
-
-
-
-
-
 </body>
 
 </html>
